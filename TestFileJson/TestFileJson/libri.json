@@ -1,0 +1,27 @@
+{
+  "libri" : [ {
+    "titolo" : "La concessione del telefono",
+    "autore" : "Andrea Camilleri",
+    "anno" : 1998
+  }, {
+    "titolo" : "Fahrenheit 451",
+    "autore" : "Ray Bradbury",
+    "anno" : 1953
+  }, {
+    "titolo" : "Il guardiano degli innocenti",
+    "autore" : "Andrzej Sapkowski",
+    "anno" : 1993
+  }, {
+    "titolo" : "as",
+    "autore" : "aq",
+    "anno" : 1
+  }, {
+    "titolo" : "a",
+    "autore" : "b",
+    "anno" : 123
+  }, {
+    "titolo" : "as",
+    "autore" : "aa",
+    "anno" : 2
+  } ]
+}

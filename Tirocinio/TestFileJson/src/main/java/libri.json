@@ -1,0 +1,20 @@
+{
+  "libri":
+  [
+    {
+      "titolo": "La concessione del telefono",
+      "autore": "Andrea Camilleri",
+      "anno": 1998
+    },
+    {
+      "titolo": "Fahrenheit 451",
+      "autore": "Ray Bradbury",
+      "anno": 1953
+    },
+    {
+      "titolo": "Il guardiano degli innocenti",
+      "autore": "Andrzej Sapkowski",
+      "anno": 1993
+    }
+  ]
+}
