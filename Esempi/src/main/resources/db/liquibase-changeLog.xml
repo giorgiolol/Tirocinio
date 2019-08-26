@@ -3,42 +3,13 @@
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
-        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
-
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
     <preConditions onFail="WARN">
         <runningAs username="root"/>
-        <not><tableExists schemaName="${install.database.name}" tableName="person" /></not>
     </preConditions>
 
-    <changeSet id="1" author="noVaxLand">
-        <createTable tableName="state">
-            <column name="id" type="char(2)">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="Stato" type="varcahar(30)"/>
-        </createTable>       
+    <include file="db/libro.xml"/>
 
-        <createTable tableName="person">
-            <column name="id" type="int" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="firstname" type="varchar(50)"/>
-            <column name="lastname" type="varchar(50)"/>
-            <column name="state" type="char(2)">
-                <constraints foreignKeyName="fk_state_id" references="state(id)"/>
-            </column>
-
-        </createTable>
-    </changeSet>
-
-    <changeSet id="2" author="noVaxLand">
-        <addColumn tableName="person">
-            <column name="username" type="varchar(8)"/>
-        </addColumn>
-    </changeSet>
-    <changeSet id="3" author="noVaxLand">
-    </changeSet>
 
 </databaseChangeLog>

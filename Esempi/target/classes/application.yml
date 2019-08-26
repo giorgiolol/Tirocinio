@@ -11,20 +11,13 @@ logging:
   level:
     liquibase: INFO
 
-
 spring:
-  jpa:
-    hibernate:
-      ddl-auto: none
-    database: MYSQL
-    show_sql: true
-  datasource:
-    url: jdbc:mysql://localhost:3306/Libreria
-    username: root
-    password:
-    driver-class-name: com.mysql.jdbc.Driver
+  profiles:
+    active: dev
+
   liquibase:
-    change-log: classpath:db/liquibase-changeLog.xml
+    enabled: false
+
 
 
 

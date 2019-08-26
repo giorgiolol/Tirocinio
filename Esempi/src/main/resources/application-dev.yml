@@ -1,0 +1,29 @@
+server:
+  port: 7900
+
+hibernate:
+  dialect: org.hibernate.dialect.MySQL5Dialect
+  packagesToScan: /
+  hbm2ddl:
+    auto: update
+
+logging:
+  level:
+    liquibase: INFO
+
+spring:
+  profiles: dev
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database: MYSQL
+    show_sql: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/Libreria
+    username: root
+    password:
+    driver-class-name: com.mysql.jdbc.Driver
+  liquibase:
+    enabled: true
+    change-log: classpath:db/liquibase-changeLog.xml

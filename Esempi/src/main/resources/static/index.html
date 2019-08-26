@@ -6,14 +6,19 @@
 </head>
 <body>
 
-<form action="/rest/libri" method="POST" onsubmit="/rest/libri">
+<form action="/rest/libri" method="POST">
     <p>put an id<input type="number" name="id" >
     <button type="submit" value="Submit" > POST</button></p>
 </form >
 
-<form action="/rest/libri" method="GET" onsubmit="/rest/libri">
+<form action="/rest/libri" method="GET">
     <p>put an id <input type="number" name="id" >
     <button type="submit" value="Submit" > GET</button> </p>
+</form >
+
+<form action="/rest/libri/autore" method="POST" >
+    <p>put an author<input type="text" name="autore" >
+        <button type="submit" value="Submit" > POST</button></p>
 </form >
 </body>
 </html>
