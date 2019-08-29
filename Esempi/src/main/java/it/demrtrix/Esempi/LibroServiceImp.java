@@ -4,6 +4,7 @@ package it.demrtrix.Esempi;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -17,18 +18,13 @@ public class LibroServiceImp implements LibroService {
 
     @Override
     public Collection<Libro> findByAutore(String autore) {
-        if(autore.length()<0 || autore.length()>40 ){
-            throw new IllegalArgumentException("L'autore deve rispettare i criteri del database");
-        }
         log.info(libroRepository.findByAutore(autore));
         return libroRepository.findByAutore(autore) ;
     }
 
     @Override
     public Libro findById(Long id) {
-        if(id<0L){
-            throw new IllegalArgumentException("L' id deve essere maggiore di 0");
-        }
+
         Optional<Libro> libroOptional = libroRepository.findById(id);
         if(libroOptional.isPresent()){
             Libro libro = libroOptional.get();

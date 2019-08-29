@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,10 +31,21 @@ public class LibroRestController {
      * @return
      */
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<Libro> post(@RequestBody Libro libro) {
+    public ResponseEntity<Libro> addLibro(@RequestBody Libro libro) {
+        if(libro.getAnno()<=0L){
+            return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
+        }
+        libro.setTitolo(libro.getTitolo().trim());
+        if(libro.getTitolo().length()==0 || libro.getTitolo().length()>40){
+            return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
+        }
+        libro.setAutore(libro.getAutore().trim());
+        if(libro.getAutore().length()==0 || libro.getAutore().length()>40){
+            return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
+        }
 
         libro = libroService.addLibro(libro);
-        return new ResponseEntity<Libro>(libro, HttpStatus.OK);
+        return new ResponseEntity<Libro>(libro, HttpStatus.CREATED);
     }
 
 
@@ -45,6 +58,9 @@ public class LibroRestController {
      */
     @RequestMapping(value ="/{id}")
     public ResponseEntity<Libro> getIdByPath(@PathVariable Long id) {
+        if(id<0L){
+            return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
+        }
         Libro libro = libroService.findById(id);
         return new ResponseEntity<Libro>(libro, HttpStatus.OK);
     }
@@ -60,6 +76,20 @@ public class LibroRestController {
     @RequestMapping(value="/{id}",method = RequestMethod.PUT)
     public ResponseEntity<Libro> putLibro(@PathVariable(name="id") Long id,
                                           @RequestBody Libro libro) {
+        if(libro.getAnno()<=0L){
+            return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
+        }
+        libro.setTitolo(libro.getTitolo().trim());
+        if(libro.getTitolo().length()==0 || libro.getTitolo().length()>40){
+            return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
+        }
+        libro.setAutore(libro.getAutore().trim());
+        if(libro.getAutore().length()==0 || libro.getAutore().length()>40){
+            return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
+        }
+        if(id<0L){
+            return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
+        }
         libro = libroService.updateLibro(id,libro);
         return new ResponseEntity<Libro>(libro, HttpStatus.OK);
     }
@@ -72,6 +102,9 @@ public class LibroRestController {
      */
     @RequestMapping(method = RequestMethod.DELETE)
     public ResponseEntity<Libro> deleteLibroById(@RequestParam(name="id", defaultValue="0") Long id){
+        if(id<0L){
+            return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
+        }
         Libro libro = libroService.removeLibro(id);
         return new ResponseEntity<>(libro,HttpStatus.OK);
     }
@@ -90,15 +123,21 @@ public class LibroRestController {
 
     }
 
-    @RequestMapping(value ="autore/{autore}")
-    public ResponseEntity<List<Libro>> getLibribyAutorebyPath(@PathVariable String autore) {
-        List<Libro> libri =(List<Libro>) libroService.findByAutore(autore);
+    @RequestMapping(value ="/autore/{autore}")
+    public ResponseEntity<Collection<Libro>> getLibribyAutorebyPath(@PathVariable String autore) {
+        if(autore.length()<0 || autore.length()>40 ){
+            throw new IllegalArgumentException("L'autore deve rispettare i criteri del database");
+        }
+        Collection<Libro> libri =libroService.findByAutore(autore);
         return new ResponseEntity<>(libri, HttpStatus.OK);
     }
 
    @RequestMapping(value ="/autore", method = RequestMethod.GET)
     public ResponseEntity<List<Libro>> getLibribyAutore(@RequestParam(name="autore", required=false, defaultValue="") String autore) {
-       List<Libro> libri =(List<Libro>) libroService.findByAutore(autore);
+       if(autore.length()<0 || autore.length()>40 ){
+           return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
+       }
+        List<Libro> libri =(List<Libro>) libroService.findByAutore(autore);
        return new ResponseEntity<>(libri, HttpStatus.OK);
     }
 
