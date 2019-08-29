@@ -1,0 +1,27 @@
+{
+    "name": "Libro",
+    "fields": [
+        {
+            "fieldName": "titolo",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "autore",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "anno",
+            "fieldType": "Integer"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20190827153050",
+    "entityTableName": "libro",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "serviceImpl",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

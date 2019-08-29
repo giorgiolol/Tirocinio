@@ -1,0 +1,43 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "it.demetrix.libreria",
+      "nativeLanguage": "it"
+    },
+    "jhipsterVersion": "6.1.2",
+    "applicationType": "monolith",
+    "baseName": "libreria",
+    "packageName": "it.demetrix.libreria",
+    "packageFolder": "it/demetrix/libreria",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "mysql",
+    "prodDatabaseType": "mysql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "MGRiNTgyOGE0MzVkOTYxNzM0ZGExMzFkNzI2NTcwNjA0YTM0MjExMzRhN2FjMDA5NTQwNjNhY2I3NTNjYzNiZmY4ZjlhNmZkMzM0ZmIxOWFkYzM1NTE4ZmMyZWE1MzhlNjM3ZWRjNmM3NDYxZDU0YjE3NWE1MGFhNTRkYzVlYTI=",
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "clientFramework": "angularX",
+    "clientTheme": "none",
+    "clientThemeVariant": "",
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": true,
+    "nativeLanguage": "it",
+    "languages": [
+      "it",
+      "en"
+    ]
+  }
+}
