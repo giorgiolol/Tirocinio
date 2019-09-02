@@ -5,44 +5,34 @@ import it.demetrix.libreria.domain.Libro;
 import it.demetrix.libreria.repository.LibroRepository;
 import it.demetrix.libreria.service.LibroService;
 import it.demetrix.libreria.web.rest.errors.ExceptionTranslator;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.trace.http.HttpTrace;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithSecurityContext;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.security.web.FilterChainProxy;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
-import org.springframework.web.context.WebApplicationContext;
+import static io.restassured.http.ContentType.JSON;
 
 import javax.persistence.EntityManager;
-import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static io.restassured.RestAssured.given;
 import static it.demetrix.libreria.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 /**
  * Integration tests for the {@link LibroResource} REST controller.
  */
@@ -143,6 +133,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
     public void createLibro() throws Exception {
         int databaseSizeBeforeCreate = libroRepository.findAll().size();
 
+
         // Create the Libro
         restLibroMockMvc.perform(post("/api/libros")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -181,18 +172,54 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
     }
 
 
+
+    @Test
+    //@Transactional
+    public void  login()throws Exception{
+
+        Map<String, Object> jsonAsMap = new HashMap<>();
+
+        jsonAsMap = new HashMap<>();
+        jsonAsMap.put("username", "admin");
+        jsonAsMap.put("password", "admin");
+        jsonAsMap.put("rememberMe", true);
+
+        String jwt =
+            given()
+                .contentType(JSON)
+                .body(jsonAsMap)
+                .log()
+                .all()
+                .when()
+                .post("/api/authenticate")
+                .then()
+                .log()
+                .status()
+                .extract().header("Authorization");
+
+        given()
+            .header("Authorization",jwt)
+            .log()
+            .all()
+            .when()
+            .get("/api/libros/{id}", 14)
+            .then()
+            .log()
+            .body()
+            .statusCode(200);
+
+    }
+
+
     @Test
     @Transactional
     @WithMockUser(username = "admin",password = "admin",authorities={"ROLE_USER"})
     public void getAllLibros() throws Exception {
-        // Initialize the database
-       // libroRepository.saveAndFlush(libro);
 
-        // Get all the libroList
-        restLibroMockMvc.perform(get("/api/libros?sort=id,desc"))
+       restLibroMockMvc.perform(get("/api/libros?sort=id,desc"))
             .andExpect(status().isOk())
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE));
+            .andDo(MockMvcResultHandlers.print());
+           // .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE));
 
     }
 

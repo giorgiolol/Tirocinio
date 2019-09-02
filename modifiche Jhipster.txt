@@ -1,0 +1,35 @@
+--	Aggiunto alla classe AuthoritiesConstants  ----------
+	-Attributo con il nuovo livello utente
+
+---------------  Aggiunto al file autority.csv  -----------------
+	-Elemento con il nome del nuovo livello utente
+
+---------------- Aggiunto al file security config ------------------
+	-Gli antmatchers per far si che solo anculi utenti potessero fare operazioni specifiche
+		antMatchers(tipo richiesta,url).hasAuthority(nime authority)
+	-usato hasAnyAutority nel caso di multipli livelli richiesti
+
+------------------ Aggiunto al rest controller -----------------
+	-un mapping per /libros/you che farà vedere tutti i libri dell utente loggato
+
+----------------- Aggiunto al service --------------------------
+	-un servizio che permette di ricercare per autore
+
+---------------- cambiato nel token provider------------------
+	-nel metodo getAutentication ()
+	la creazione del principal user per far generare un
+	custom user
+	-User principal = new CustomUser(claims.getSubject(), "", authorities,Long.parseLong(claims.get("id").toString()));
+
+------ cambiato nel  DomainUserDetailsService-------------
+	-return new CustomUser(user.getLogin(),
+            user.getPassword(),
+            grantedAuthorities, user.getId());
+	-classe che ha le informazioni per cambiare l'id
+	-nel metodo createSpringSecurityUser()
+	cambiata la creazione del valore di ritorno cosi da crearlo
+	con custom user
+------------------ aggiunto ai test -----------------------
+	-test per vedere se un jwt generato dal nostro 
+	server è riconosciuto
+

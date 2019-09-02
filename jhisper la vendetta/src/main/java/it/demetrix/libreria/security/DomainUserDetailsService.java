@@ -2,6 +2,7 @@ package it.demetrix.libreria.security;
 
 import it.demetrix.libreria.domain.User;
 import it.demetrix.libreria.repository.UserRepository;
+import it.demetrix.libreria.security.users.CustomUser;
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,8 +56,8 @@ public class DomainUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
             .map(authority -> new SimpleGrantedAuthority(authority.getName()))
             .collect(Collectors.toList());
-        return new org.springframework.security.core.userdetails.User(user.getLogin(),
+        return new CustomUser(user.getLogin(),
             user.getPassword(),
-            grantedAuthorities);
+            grantedAuthorities, user.getId());
     }
 }

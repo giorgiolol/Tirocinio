@@ -5,6 +5,7 @@ import java.security.Key;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import it.demetrix.libreria.security.users.CustomUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -72,10 +73,14 @@ public class TokenProvider implements InitializingBean {
         } else {
             validity = new Date(now + this.tokenValidityInMilliseconds);
         }
-
+        log.info("-------------------------------------------------------------------------");
+        log.info(""+authentication.getPrincipal().getClass());
+        log.info("-------------------------------------------------------------------------");
+        CustomUser user = (CustomUser) authentication.getPrincipal();
         return Jwts.builder()
             .setSubject(authentication.getName())
             .claim(AUTHORITIES_KEY, authorities)
+            .claim("id",user.getId())
             .signWith(key, SignatureAlgorithm.HS512)
             .setExpiration(validity)
             .compact();
@@ -92,7 +97,7 @@ public class TokenProvider implements InitializingBean {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
-        User principal = new User(claims.getSubject(), "", authorities);
+        User principal = new CustomUser(claims.getSubject(), "", authorities,Long.parseLong(claims.get("id").toString()));
 
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
