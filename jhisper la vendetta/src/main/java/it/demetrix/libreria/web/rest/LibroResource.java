@@ -82,7 +82,19 @@ public class LibroResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/libros")
-    public ResponseEntity<Libro> updateLibro(@RequestBody Libro libro) throws URISyntaxException {
+    public ResponseEntity<Libro> updateLibro(@RequestBody Libro libro) throws Exception,URISyntaxException {
+        log.debug("REST request to update Libro : {}", libro);
+        if (libro.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        Libro result = libroService.update(libro);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, libro.getId().toString()))
+            .body(result);
+    }
+
+    @PutMapping("/libros/Editor")
+    public ResponseEntity<Libro> updateLibroEditor(@RequestBody Libro libro) throws URISyntaxException {
         log.debug("REST request to update Libro : {}", libro);
         if (libro.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

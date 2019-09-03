@@ -3,8 +3,11 @@ package it.demetrix.libreria.config;
 import it.demetrix.libreria.security.*;
 import it.demetrix.libreria.security.jwt.*;
 
+import it.demetrix.libreria.service.UserService;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.BeanInitializationException;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
@@ -26,10 +29,10 @@ import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 @Import(SecurityProblemSupport.class)
     public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final TokenProvider tokenProvider;
-
+    private TokenProvider tokenProvider;
     private final CorsFilter corsFilter;
     private final SecurityProblemSupport problemSupport;
+
 
     public SecurityConfiguration(TokenProvider tokenProvider, CorsFilter corsFilter, SecurityProblemSupport problemSupport) {
         this.tokenProvider = tokenProvider;
@@ -88,6 +91,7 @@ import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
             .antMatchers(HttpMethod.GET,"/api/libros/**").authenticated()
             .antMatchers(HttpMethod.PUT,"/api/libros").hasAnyAuthority(AuthoritiesConstants.ADMIN,AuthoritiesConstants.EDITOR)
             .antMatchers(HttpMethod.DELETE,"/api/libros/*").hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers(HttpMethod.PUT,"api/libros/Editor").hasAuthority(AuthoritiesConstants.EDITOR)
             .antMatchers("/libro/*/edit").hasAnyAuthority(AuthoritiesConstants.ADMIN,AuthoritiesConstants.EDITOR)
             .antMatchers("/management/health").permitAll()
             .antMatchers("/management/info").permitAll()

@@ -13,6 +13,7 @@ import it.demetrix.libreria.web.rest.errors.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -74,6 +75,10 @@ public class UserService {
                 this.clearUserCaches(user);
                 return user;
             });
+    }
+    @Transactional
+    public Optional<User> findyById (Long id){
+        return userRepository.findById(id);
     }
 
     public Optional<User> requestPasswordReset(String mail) {

@@ -20,6 +20,7 @@ public interface LibroService {
      */
     Libro save(Libro libro);
 
+    Libro update(Libro libro) throws Exception;
     /**
      * Get all the libros.
      *

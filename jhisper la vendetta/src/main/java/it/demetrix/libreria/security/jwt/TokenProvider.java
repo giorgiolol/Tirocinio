@@ -5,16 +5,21 @@ import java.security.Key;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import it.demetrix.libreria.domain.User;
+import it.demetrix.libreria.repository.UserRepository;
 import it.demetrix.libreria.security.users.CustomUser;
+import it.demetrix.libreria.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import io.github.jhipster.config.JHipsterProperties;
@@ -37,8 +42,11 @@ public class TokenProvider implements InitializingBean {
 
     private final JHipsterProperties jHipsterProperties;
 
-    public TokenProvider(JHipsterProperties jHipsterProperties) {
+    private final UserRepository userRepository;
+
+    public TokenProvider(JHipsterProperties jHipsterProperties,UserRepository userRepository) {
         this.jHipsterProperties = jHipsterProperties;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -61,6 +69,7 @@ public class TokenProvider implements InitializingBean {
                 .getTokenValidityInSecondsForRememberMe();
     }
 
+    @Transactional
     public String createToken(Authentication authentication, boolean rememberMe) {
         String authorities = authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
@@ -73,9 +82,6 @@ public class TokenProvider implements InitializingBean {
         } else {
             validity = new Date(now + this.tokenValidityInMilliseconds);
         }
-        log.info("-------------------------------------------------------------------------");
-        log.info(""+authentication.getPrincipal().getClass());
-        log.info("-------------------------------------------------------------------------");
         CustomUser user = (CustomUser) authentication.getPrincipal();
         return Jwts.builder()
             .setSubject(authentication.getName())
@@ -96,9 +102,14 @@ public class TokenProvider implements InitializingBean {
             Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-
-        User principal = new CustomUser(claims.getSubject(), "", authorities,Long.parseLong(claims.get("id").toString()));
-
+        Optional<User> currentUser = userRepository.findById( Long.parseLong(claims.get("id").toString()));
+        User currentUserInfo = currentUser.get();
+        CustomUser principal = new CustomUser(claims.getSubject(),
+                                            "",
+                                            authorities,
+                                            Long.parseLong(claims.get("id").toString()),
+                                            currentUserInfo.getEmail());
+        log.info("Email utente "+principal.getEmail());
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 
