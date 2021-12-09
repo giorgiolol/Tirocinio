@@ -34,7 +34,7 @@
     "ngx-webstorage": "4.0.1",
     "node-dev": "^4.0.0",
     "rxjs": "6.5.2",
-    "swagger-ui": "^3.23.6",
+    "swagger-ui": "^4.1.2",
     "tslib": "1.10.0",
     "zone.js": "0.9.1"
   },
